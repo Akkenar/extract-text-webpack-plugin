@@ -91,10 +91,15 @@ class ExtractTextPlugin {
     const source = new ConcatSource();
 
     for (const chunkModule of chunk.modulesIterable) {
-      let moduleSource = chunkModule.source(
-        compilation.dependencyTemplates,
-        compilation.runtimeTemplate
-      );
+      let moduleSource = null;
+
+      // The module might not have a source if extracted by another plugin.
+      if (chunkModule.source) {
+        moduleSource = chunkModule.source(
+          compilation.dependencyTemplates,
+          compilation.runtimeTemplate
+        );
+      }
 
       // This module was concatenated by the ModuleConcatenationPlugin; because the pitching loader
       // only produces commonjs results, at least for now things we want to extract can't be in them.
